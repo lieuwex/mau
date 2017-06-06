@@ -1,34 +1,31 @@
-var net = require('net');
-var utils = require('./utils.js');
+const PORT = 1337;
 
-var connections = [];
+const net = require('net');
+const utils = require('./utils.js');
 
-/**
- * Wrapper thingy for a Socket.
- * @class Connection
- * @constructor
- * @param socket {Socket}
- */
-var Connection = (function () {
-	var Connection = function (socket) {
+const connections = [];
+
+class Connection {
+	/**
+	 * @param socket {Socket}
+	 */
+	constructor(socket) {
 		this.id = utils.uniqid();
 		this.socket = socket;
-	};
+	}
+}
 
-	return Connection;
-})();
-
-net.createServer(function (socket) {
-	var connection = new Connection(socket);
+net.createServer(socket => {
+	const connection = new Connection(socket);
 	connections.push(connection);
 }).listen({
-	port: 1337,
-})
+	port: PORT,
+}, () => console.log(`listening on port ${PORT}`));
 
 module.exports = {
 	/**
 	 * @property connections
 	 * @type Connection[]
 	 */
-	connections: connections,
+	connections,
 };

@@ -1,23 +1,23 @@
-var cards = require('cards');
-var naampje = require('naampje').name;
-var utils = require('./utils.js');
+const cards = require('cards');
+const naampje = require('naampje').name;
+const utils = require('./utils.js');
 
-var defaultOptions = {
+const defaultOptions = {
 	jokers: 2,
-	cardsPerPlayer: 7,
+	cardsPerPlayer: (/* player */) => 7,
+	title: naampje(),
 };
 
-module.exports = (function () {
-	var Game = function (options) {
+class Game {
+	constructor(options) {
 		// set default values for options that aren't given.
-		for (var key in defaultOptions) {
+		for (const key in defaultOptions) {
 			if (!options[key]) {
 				options[key] = defaultOptions[key];
 			}
 		}
 
 		this.id = utils.uniqid();
-		this.title = options.title || naampje();
 		this.options = options;
 		this.deck = new cards.PokerDeck({ jokers: options.jokers });
 
@@ -28,38 +28,38 @@ module.exports = (function () {
 		this.onTurn = null;
 
 		this._callbacks = {};
-	};
+	}
 
-	Game.prototype._emit = function (event, value) {
-		var self = this;
-		var callbacks = this._callbacks[event];
+	_emit(event, value) {
+		const self = this;
+		const callbacks = this._callbacks[event];
 		if (callbacks) {
 			callbacks.forEach(function (func) {
 				func.apply(self, value);
 			});
 		}
-	};
-	Game.prototype.on = function (event, callback) {
+	}
+	on(event, callback) {
 		if (!this._callbacks[event]) {
 			this._callbacks[event] = [];
 		}
 		this._callbacks[event].push(callback);
-	};
+	}
 
-	Game.prototype.cycle = function () {
+	cycle() {
 		this.onTurn = utils.mod(this.onTurn + this.direction, this.players.length);
-	};
+	}
 
-	Game.prototype.addPlayer = function (player) {
+	addPlayer(player) {
 		player.gameId = this.id;
 		this.players.push(player);
 		if (!this.admin) {
 			this.admin = player;
 		}
-	};
+	}
 
-	Game.prototype.removePlayer = function (player) {
-		var index = this.players.indexOf(player);
+	removePlayer(player) {
+		const index = this.players.indexOf(player);
 		player.gameId = null;
 		delete this.players[index];
 
@@ -68,20 +68,27 @@ module.exports = (function () {
 		} else if (this.admin === player) {
 			this.admin = index === 0 ? this.players[1] : this.players[index - 1];
 		}
-	};
+	}
 
-	Game.prototype.start = function () {
-		var self = this;
+	start() {
+		const self = this;
 		self.deck.shuffleAll();
-		self.players.forEach(function (player) {
+		for (const player of self.players) {
 			player.hand = [];
-			for (var i = 0; i < options.cardsPerPlayer; i++) {
+
+			let cardCount = this.options.cardsPerPlayer(player);
+			if (isNaN(cardCount)) {
+				cardCount = self.deck.deck.length / self.players.length
+				cardCount = Math.floor(cardCount);
+			}
+
+			for (let i = 0; i < cardCount; i++) {
 				player.hand.insert(self.deck.draw());
 			}
-		});
+		}
 
 		// Put the first card on the deck.
-		var card = self.deck.drawToDiscard();
+		const card = self.deck.drawToDiscard();
 
 		// Get the player who goes first.
 		this.onTurn = utils.randomInt(0, self.players.length - 1);
@@ -91,17 +98,16 @@ module.exports = (function () {
 			direction: this.direction,
 			card: card,
 		});
-	};
+	}
 
-	Game.prototype.destroy = function () {
-		var self = this;
-		if (this._destroyed) throw new Error('game already destroyed.');
+	destroy() {
+		if (this._destroyed) {
+			throw new Error('game already destroyed.');
+		}
 
-		this.players.forEach(function (player) {
-			self.removePlayer(player);
-		});
+		this.players.forEach(player => self.removePlayer(player));
 		this._destroyed = true;
-	};
+	}
+}
 
-	return Game;
-})();
+module.exports = Game;

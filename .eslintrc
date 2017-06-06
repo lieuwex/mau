@@ -1,5 +1,39 @@
 {
+	"parserOptions": {
+		"ecmaVersion": 2017,
+		"sourceType": "module",
+		"ecmaFeatures": {
+			"jsx": true,
+			"experimentalObjectRestSpread": true,
+			"impliedStrict": true
+		}
+	},
+	"extends": "eslint:recommended",
 	"rules": {
+		"eqeqeq": [
+			2,
+			"allow-null"
+		],
+
+		"accessor-pairs": 2,
+		"curly": [
+			1,
+			"all"
+		],
+		"dot-location": [
+			1,
+			"property"
+		],
+		"no-empty-function": 2,
+		"no-implied-eval": 2,
+		"no-lone-blocks": 1,
+		"no-new-func": 2,
+		"no-new-wrappers": 2,
+		"no-proto": 1,
+		"no-useless-call": 1,
+		"radix": 2,
+		"yoda": 2,
+
 		"indent": [
 			2,
 			"tab"
@@ -13,8 +47,8 @@
 			"unix"
 		],
 		"semi": [
-			2,
-			"always"
+			0,
+			"never"
 		],
 
 		"no-console": 0,
@@ -28,7 +62,6 @@
 		"no-duplicate-case": 2,
 		"no-empty-character-class": 2,
 		"no-empty": 1,
-		"no-redeclare": 0,
 		"no-invalid-regexp": 2,
 		"no-irregular-whitespace": 2,
 		"no-unreachable": 1,
@@ -49,13 +82,27 @@
 
 		"handle-callback-err": 1,
 		"no-path-concat": 2,
+
+		"no-var": 0,
+		"prefer-const": 1,
+		"prefer-spread": 1,
+		"arrow-spacing": [
+			2,
+			{ "before": true, "after": true }
+		],
+		"arrow-parens": [
+			1,
+			"as-needed"
+		]
 	},
 	"env": {
-		"node": true
+		"browser": true,
+		"node": true,
+		"shared-node-browser": true,
+		"es6": true
 	},
-	"extends": "eslint:recommended",
-	"ecmaFeatures": {
-		"experimentalObjectRestSpread": true,
-		"blockBindings": true
-	}
+	"plugins": [
+		"jsdoc",
+		"lodash"
+	]
 }

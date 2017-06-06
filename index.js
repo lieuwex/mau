@@ -1,9 +1,9 @@
-var connections = require('./connections.js');
-var Game = require('./game.js');
+const connections = require('./connections.js');
+const Game = require('./game.js');
 
-games = [];
+const games = [];
 function createGame () {
-	var game = new Game();
+	const game = new Game();
 	games.push(game);
 	return game;
 }

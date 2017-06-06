@@ -1,10 +1,10 @@
-module.exports = (function () {
-	var Player = function () {
-		this.connection = null;
+class Player {
+	constructor(connection) {
+		this.connection = connection;
 
 		this.deck = null;
 		this.gameId = null;
-	};
+	}
+}
 
-	return Player;
-})();
+module.exports = Player;
