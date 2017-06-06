@@ -1,5 +1,5 @@
 {
-  "name": "pesten",
+  "name": "mau",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -7,5 +7,9 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Lieuwe Rooijakkers <lieuwerooijakkers@gmail.com> (http://www.lieuwex.me/)",
-  "license": "GPL-3.0"
+  "license": "GPL-3.0",
+  "dependencies": {
+    "cards": "^0.1.1",
+    "naampje": "^1.0.1"
+  }
 }
